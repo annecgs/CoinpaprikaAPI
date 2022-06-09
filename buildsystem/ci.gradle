@@ -1,0 +1,73 @@
+ext {
+    bintrayRepo = 'pkostecki'
+    bintrayName = 'com.coinpaprika.apiclient'
+
+    publishedGroupId = 'com.coinpaprika'
+    libraryName = 'CoinpaprikaAPIClient'
+    artifact = 'apiclient'
+
+    libraryDescription = 'This library contains Coinpaprika API Client written in Kotlin.'
+
+    siteUrl = 'https://github.com/coinpaprika/coinpaprika-api-kotlin-client'
+    gitUrl = 'https://github.com/coinpaprika/coinpaprika-api-kotlin-client.git'
+
+    libraryVersion = '0.5.2'
+
+    developerId = 'coinpaprika'
+    developerName = 'CoinPaprika'
+    developerEmail = 'it@greywizard.com'
+
+    licenseName = 'The MIT License'
+    licenseUrl = 'https://opensource.org/licenses/MIT'
+    allLicenses = ["MIT"]
+}
+
+group = publishedGroupId
+version = libraryVersion
+
+def pomConfig = {
+    name libraryName
+    description libraryDescription
+    url siteUrl
+
+    licenses {
+        license {
+            name licenseName
+            url licenseUrl
+        }
+    }
+    developers {
+        developer {
+            id developerId
+            name developerName
+            email developerEmail
+        }
+    }
+    scm {
+        connection gitUrl
+        developerConnection gitUrl
+        url siteUrl
+    }
+}
+
+task sourcesJar(type: Jar) {
+    archiveClassifier.set('sources')
+    from sourceSets.main.allSource
+}
+
+artifacts {
+    archives sourcesJar
+}
+
+publishing {
+    publications {
+        mavenJava(MavenPublication) {
+            from components.java
+            artifact = sourcesJar
+            pom.withXml {
+                def root = asNode()
+                root.children().last() + pomConfig
+            }
+        }
+    }
+}
